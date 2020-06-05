@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqyj.crm.customer.dao.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.hqyj.crm.customer.entity.Customer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="industry" jdbcType="VARCHAR" property="industry" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="tell_phone" jdbcType="VARCHAR" property="tellPhone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, source, industry, level, phone, tell_phone, email, address
+  </sql>
+	<!-- 新增字典表 -->
+	<insert id="insertDict" parameterType="com.hqyj.crm.customer.entity.Dict">
+		insert into c_dictionaries (id,name) values (#{id},#{name})
+	</insert>
+	<!-- 查询字典表 -->
+	<select id="queryDict" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select name from c_dictionaries where id=#{id}
+	</select>
+	<!-- 查询字典是否存在某条数据 -->
+	<select id="dictIsExist" parameterType="com.hqyj.crm.customer.entity.Dict" resultType="com.hqyj.crm.customer.entity.Dict">
+		select id name from c_dictionaries where id=#{id} and name=#{name}
+	</select>
+	<!-- 查询所有的customer -->
+	<select id="queryCustomers" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from m_customer
+	</select>
+	<!--条件查询 -->
+	<select id="queryCustomersBySelect" parameterType="com.hqyj.crm.customer.entity.CustSearch" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from m_customer
+		<where>
+			<!-- &lt;if test="id != null"&gt;
+				and id=#{id}
+			&lt;/if&gt; -->
+			<if test="name != null">
+				and name=#{name,jdbcType=VARCHAR}
+			</if>
+			<if test="source != null">
+				and source=#{source,jdbcType=VARCHAR}
+			</if>
+			<if test="industry != null">
+				and industry=#{industry,jdbcType=VARCHAR}
+			</if>
+			<if test="level != null">
+				and level=#{level,jdbcType=VARCHAR}
+			</if>
+			<!-- &lt;if test="phone != null"&gt;
+				and phone=#{phone,jdbcType=VARCHAR}
+			&lt;/if&gt;
+			&lt;if test="tellPhone != null"&gt;
+				and tell_phone=#{tellPhone,jdbcType=VARCHAR}
+			&lt;/if&gt;
+			&lt;if test="email != null"&gt;
+				and email=#{email,jdbcType=VARCHAR}
+			&lt;/if&gt;
+			&lt;if test="address != null"&gt;
+				and address=#{address,jdbcType=VARCHAR}
+			&lt;/if&gt; -->
+		</where>
+	</select>
+
+
+
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from m_customer
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_customer
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hqyj.crm.customer.entity.Customer" useGeneratedKeys="true">
+		insert into
+		m_customer (id, name, source,
+		industry, level, phone,
+		Tell_phone, email,
+		Address
+		)
+		values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+		#{source,jdbcType=VARCHAR},
+		#{industry,jdbcType=VARCHAR},
+		#{level,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{tellPhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.hqyj.crm.customer.entity.Customer" useGeneratedKeys="true" keyColumn="product_id" keyProperty="productId">
+		insert into m_customer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="source != null">
+				source,
+			</if>
+			<if test="industry != null">
+				industry,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="tellPhone != null">
+				Tell_phone,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="address != null">
+				Address,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				#{source,jdbcType=VARCHAR},
+			</if>
+			<if test="industry != null">
+				#{industry,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="tellPhone != null">
+				#{tellPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hqyj.crm.customer.entity.Customer">
+		update m_customer
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=VARCHAR},
+			</if>
+			<if test="industry != null">
+				industry = #{industry,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="tellPhone != null">
+				Tell_phone = #{tellPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				Address = #{address,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.hqyj.crm.customer.entity.Customer">
+		update m_customer
+		set name = #{name,jdbcType=VARCHAR},
+		source = #{source,jdbcType=VARCHAR},
+		industry =
+		#{industry,jdbcType=VARCHAR},
+		level = #{level,jdbcType=VARCHAR},
+		phone =
+		#{phone,jdbcType=VARCHAR},
+		Tell_phone = #{tellPhone,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		Address =
+		#{address,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
